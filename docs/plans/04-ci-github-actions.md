@@ -29,7 +29,7 @@ Out of scope:
   - Node from `web/.nvmrc` (`node-version-file`).
 - **Caching:** Composer's cache keyed on `api/composer.lock`; npm's cache built into `setup-node`, keyed on `web/package-lock.json`. Installs are `composer install --no-interaction --prefer-dist` and `npm ci`.
 - **Actions (new outside code, so they need your OK):**
-  - GitHub's own `actions/checkout@v5`, `actions/setup-node@v5` and `actions/cache@v4`, on major tags.
+  - GitHub's own `actions/checkout@v7`, `actions/setup-node@v7` and `actions/cache@v6`, on major tags (the first run used v5/v4; `cache@v4` triggered a Node 20 deprecation warning, so they were moved to the current majors, each out for months).
   - The third-party `shivammathur/setup-php`, pinned to the commit of release 2.40.0 (`eb7c497e…`, checked against the tag), so a moved tag can't change what runs. It's the same pin saas-starter uses.
   - `.github/dependabot.yml` for the `github-actions` ecosystem, checking weekly with a 7-day cooldown. It keeps the tags and the SHA current, and opens PRs only for the workflow file. Composer and npm updates stay manual.
 - **Timeouts:** 15 minutes per job, so a hung test can't use up runner minutes.

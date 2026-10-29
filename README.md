@@ -71,6 +71,7 @@ Send the token as `Authorization: Bearer <token>`, with `Accept: application/jso
 ## Tests
 ```bash
 cd api && php artisan test     # Pest, on react_saas_test (rebuilt on every run)
+cd api && vendor/bin/pint --test   # PHP code style (vendor/bin/pint to fix)
 cd web && npm test             # Vitest + Testing Library, API calls mocked
 ```
 `npm run lint`, `npm run typecheck` and `npm run build` check the rest of the web app.
