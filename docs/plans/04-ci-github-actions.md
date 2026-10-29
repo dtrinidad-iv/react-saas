@@ -72,6 +72,25 @@ None. There's no new page; the badge is the only visible change.
 
 Flows: none. There's no user-facing flow.
 
+## Outcome
+- PR #1 (`ci/github-actions`), four runs:
+  1. first push: both jobs green (`api` 35s, `web` 36s). One warning: `actions/cache@v4` targets the deprecated Node 20.
+  2. after moving to `checkout@v7`, `setup-node@v7` and `cache@v6`: green, with no Node 20 warning;
+  3. deliberate Pint violation in `api/routes/web.php`: `api` failed at the Pint step, and `web` still finished green;
+  4. its revert: green.
+- `/verify` locally: unchanged, all passing.
+- Reviewers:
+  - `code-reviewer`: steps match `verify.sh`, and the Postgres service works with `phpunit.xml`. One low: the README's test commands didn't name Pint, which CI runs. Fixed.
+  - `security-auditor`: no findings. It confirmed read-only permissions, no `pull_request_target`, no `${{ }}` in `run:` steps, no secrets, `persist-credentials: false`, the setup-php SHA pin (also checked by hand against tag 2.40.0) and the Dependabot config.
+  - `tenant-isolation-reviewer`, `database-reviewer` and `ui-reviewer` were not run: no models, queries, migrations or pages changed.
+
+## Follow-ups
+- `symfony/mime` CVE-2026-45070 (medium; fixed in 8.1.10): `composer update symfony/mime` before the app sends mail (plan 06). This is the same item as in plan 03.
+- Turn on Dependabot security alerts and security updates for Composer and npm in the repo settings. That's separate from `dependabot.yml`, and it reports advisories without turning CI red.
+- Keep "Run workflows from fork pull requests" off in the Actions settings.
+- Branch protection for `main` (require both checks) is up to you. The README says how.
+- `ubuntu-latest` is moving to Ubuntu 26 (GitHub's annotation on every run). Nothing in the jobs depends on the Ubuntu version.
+
 ## Commits after approval
 1. `ci: run Pint, Pest, lint, typecheck, Vitest and build on GitHub Actions` (workflow, Dependabot, README, CLAUDE.md), on the branch `ci/github-actions`.
 2. After a green run and with your OK: squash-merge the PR into `main`, then this plan → Done (`docs: mark CI plan done`).
